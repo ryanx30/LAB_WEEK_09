@@ -10,10 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -27,6 +25,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.lab_week_09.ui.theme.LAB_WEEK_09Theme
+import com.example.lab_week_09.ui.theme.OnBackgroundItemText
+import com.example.lab_week_09.ui.theme.OnBackgroundTitleText
+import com.example.lab_week_09.ui.theme.PrimaryTextButton
 
 
 class MainActivity : ComponentActivity() {
@@ -34,15 +35,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             LAB_WEEK_09Theme {
-                // A surface container using the 'background' color from the theme
                 Surface(
-                    //We use Modifier.fillMaxSize() to make the surface fill the whole screen
                     modifier = Modifier.fillMaxSize(),
-                    //We use MaterialTheme.colorScheme.background to get the background color
-                    //and set it as the color of the surface
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // FIX: Home()
                     Home()
                 }
             }
@@ -60,7 +56,6 @@ data class Student(
 //================================================================================
 @Composable
 fun Home() {
-    //Here, we create a mutable state list of Student
     val listData = remember {
         mutableStateListOf(
             Student("Tanu"),
@@ -68,16 +63,12 @@ fun Home() {
             Student("Tono")
         )
     }
-    //Here, we create a mutable state of Student (input field value)
     var inputField = remember { mutableStateOf(Student("")) }
 
-    //We call the HomeContent composable
     HomeContent(
         listData,
         inputField.value,
-        // Lambda to update the value of the inputField state
         { input -> inputField.value = inputField.value.copy(name = input) },
-        // Lambda to handle button click (Add student)
         {
             if (inputField.value.name.isNotBlank()) {
                 listData.add(inputField.value.copy())
@@ -98,38 +89,51 @@ fun HomeContent(
     onButtonClick: () -> Unit
 ) {
     LazyColumn {
+        //Here, we use item to display an item inside the LazyColumn
         item {
             Column(
+                //Modifier.padding(16.dp) is used to add padding to the Column
                 modifier = Modifier
                     .padding(16.dp)
                     .fillMaxSize(),
+                //Alignment.CenterHorizontally is used to align the Column horizontally
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(
+                //Here, we call the OnBackgroundTitleText UI Element
+                OnBackgroundTitleText(
                     text = stringResource(
                         id = R.string.enter_item
                     )
                 )
+
+                //Here, we use TextField to display a text input field
                 TextField(
+                    //Set the value of the input field
                     value = inputField.name,
+                    //Set the keyboard type of the input field
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Text
                     ),
+                    //Set what happens when the value of the input field changes
                     onValueChange = {
+                        //Here, we call the onInputValueChange lambda function
+                        //and pass the value of the input field as a parameter
                         onInputValueChange(it)
                     }
                 )
-                Button(onClick = {
-                    onButtonClick()
-                }) {
-                    Text(
-                        text = stringResource(
-                            id = R.string.button_click
-                        )
+                //Here, we call the PrimaryTextButton UI Element
+                PrimaryTextButton(
+                    text = stringResource(
+                        id = R.string.button_click
                     )
+                ) {
+                    onButtonClick()
                 }
             }
         }
+        //Here, we use items to display a list of items inside the LazyColumn
+        //This is the RecyclerView replacement
+        //We pass the listData as a parameter
         items(listData) { item ->
             Column(
                 modifier = Modifier
@@ -137,7 +141,8 @@ fun HomeContent(
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = item.name)
+                //Here, we call the OnBackgroundItemText UI Element
+                OnBackgroundItemText(text = item.name)
             }
         }
     }
