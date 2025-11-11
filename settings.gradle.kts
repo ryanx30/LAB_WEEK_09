@@ -1,12 +1,10 @@
 pluginManagement {
+    plugins {
+        id("com.google.devtools.ksp") version "2.2.21-2.0.0"
+    }
+
     repositories {
-        google {
-            content {
-                includeGroupByRegex("com\\.android.*")
-                includeGroupByRegex("com\\.google.*")
-                includeGroupByRegex("androidx.*")
-            }
-        }
+        google()
         mavenCentral()
         gradlePluginPortal()
     }
@@ -21,4 +19,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "LAB_WEEK_09"
 include(":app")
- 

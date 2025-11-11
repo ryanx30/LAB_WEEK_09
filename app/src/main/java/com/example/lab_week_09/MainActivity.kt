@@ -3,7 +3,6 @@ package com.example.lab_week_09
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -131,6 +130,7 @@ fun Home(
         { input -> inputField = inputField.copy(name = input) },
         // Handler for the Add Student button click
         {
+            // FIX: Ensure input is not blank before adding the student
             if (inputField.name.isNotBlank()) {
                 listData.add(inputField.copy())
                 inputField = Student("") // Reset input field
@@ -192,7 +192,7 @@ fun HomeContent(
                     PrimaryTextButton(
                         text = stringResource(id = R.string.button_click)
                     ) {
-                        onButtonClick() // Calls parent handler
+                        onButtonClick() // Calls parent handler (with validation logic)
                     }
                     // Button to navigate to the result screen
                     PrimaryTextButton(
